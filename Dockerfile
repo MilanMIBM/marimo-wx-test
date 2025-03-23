@@ -13,7 +13,7 @@ EXPOSE $PORT
 ENV HOST=0.0.0.0
 # Install wxai requirements directly in the base image
 RUN pip install --no-cache-dir altair pandas numpy && \
-    pip install --no-cache-dir -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.tx
+    pip install --no-cache-dir -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
 # Single entry point that uses wxai configuration
 USER appuser
 CMD marimo edit --no-token -p $PORT --host $HOST
