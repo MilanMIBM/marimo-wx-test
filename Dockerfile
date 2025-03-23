@@ -8,16 +8,12 @@ ENV MARIMO_SKIP_UPDATE_CHECK=1
 RUN pip install --no-cache-dir marimo==${marimo_version} && \
   mkdir -p /app/data && \
   chown -R appuser:appuser /app
-COPY --chown=appuser:appuser marimo/_tutorials tutorials
-RUN rm -rf tutorials/__init__.py
 ENV PORT=8080
 EXPOSE $PORT
 ENV HOST=0.0.0.0
-
 # Install wxai requirements directly in the base image
 RUN pip install --no-cache-dir altair pandas numpy && \
     pip install --no-cache-dir -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.tx
-
 # Single entry point that uses wxai configuration
 USER appuser
 CMD marimo edit --no-token -p $PORT --host $HOST
