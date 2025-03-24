@@ -17,8 +17,9 @@ RUN uv pip install --system altair pandas numpy && \
     uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
 # Create uv cache directory for appuser and set package manager to uv
 RUN mkdir -p /home/appuser/.config/marimo && \
-    sed -i 's/manager = "pip"/manager = "uv"/' /home/appuser/.config/marimo/marimo.toml 2>/dev/null || \
-    echo '[package_management]\nmanager = "uv"' > /home/appuser/.config/marimo/marimo.toml && \
+    touch /home/appuser/.config/marimo/marimo.toml && \
+    grep -q '\[package_management\]' /home/appuser/.config/marimo/marimo.toml || echo '[package_management]' >> /home/appuser/.config/marimo/marimo.toml && \
+    grep -q 'manager' /home/appuser/.config/marimo/marimo.toml && sed -i 's/manager = .*/manager = "uv"/' /home/appuser/.config/marimo/marimo.toml || echo 'manager = "uv"' >> /home/appuser/.config/marimo/marimo.toml && \
     chown -R appuser:appuser /home/appuser
 USER appuser
 # Single entry point with sandbox mode
