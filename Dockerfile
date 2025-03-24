@@ -29,4 +29,4 @@ RUN mkdir -p /home/appuser/.cache/uv && \
 USER appuser
 
 # Single entry point with sandbox mode
-CMD marimo edit --sandbox --no-token -p $PORT --host $HOST
+CMD marimo edit --no-token -p $PORT --host $HOST
