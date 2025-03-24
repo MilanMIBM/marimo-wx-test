@@ -15,8 +15,10 @@ ENV HOST=0.0.0.0
 # Install wxai requirements with uv (using --system flag)
 RUN uv pip install --system altair pandas numpy && \
     uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
-# Create uv cache directory for appuser
+# Create uv cache directory for appuser and set package manager to uv
 RUN mkdir -p /home/appuser/.cache/uv && \
+    mkdir -p /home/appuser/.config/marimo && \
+    echo '[package_management]\nmanager = "uv"' > /home/appuser/.config/marimo/marimo.toml && \
     chown -R appuser:appuser /home/appuser
 USER appuser
 # Single entry point with sandbox mode
