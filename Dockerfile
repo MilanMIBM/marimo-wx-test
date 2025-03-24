@@ -17,16 +17,13 @@ RUN uv pip install --system altair pandas numpy && \
     uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
 # Create uv cache directory for appuser
 RUN mkdir -p /home/appuser/.cache/uv && \
-    mkdir -p /home/appuser/.config/marimo && \
     chown -R appuser:appuser /home/appuser
 
-# Switch to appuser and configure marimo
-USER appuser
-RUN marimo config show || true && \
-    mkdir -p ~/.config/marimo && \
-    echo '[package_management]' > ~/.config/marimo/marimo.toml && \
-    echo 'manager = "uv"' >> ~/.config/marimo/marimo.toml && \
-    cat ~/.config/marimo/marimo.toml
+# Create pyproject.toml to override package manager setting
+RUN echo '[tool.marimo.package_management]' > /app/pyproject.toml && \
+    echo 'manager = "uv"' >> /app/pyproject.toml && \
+    chown appuser:appuser /app/pyproject.toml
 
+USER appuser
 # Single entry point with sandbox mode
 CMD marimo edit --sandbox --no-token -p $PORT --host $HOST
