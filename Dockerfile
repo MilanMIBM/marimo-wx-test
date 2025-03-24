@@ -12,9 +12,9 @@ RUN pip install --no-cache-dir uv marimo==${marimo_version} && \
 ENV PORT=8080
 EXPOSE $PORT
 ENV HOST=0.0.0.0
-# Install wxai requirements with uv
-RUN uv pip install altair pandas numpy && \
-    uv pip install -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
+# Install wxai requirements with uv (using --system flag)
+RUN uv pip install --system altair pandas numpy && \
+    uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
 # Create uv cache directory for appuser
 RUN mkdir -p /home/appuser/.cache/uv && \
     chown -R appuser:appuser /home/appuser
