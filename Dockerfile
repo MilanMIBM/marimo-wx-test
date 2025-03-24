@@ -15,12 +15,18 @@ ENV HOST=0.0.0.0
 # Install wxai requirements with uv (using --system flag)
 RUN uv pip install --system altair pandas numpy && \
     uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements.txt
-# Create uv cache directory for appuser and set package manager to uv
-RUN mkdir -p /home/appuser/.config/marimo && \
-    touch /home/appuser/.config/marimo/marimo.toml && \
-    grep -q '\[package_management\]' /home/appuser/.config/marimo/marimo.toml || echo '[package_management]' >> /home/appuser/.config/marimo/marimo.toml && \
-    grep -q 'manager' /home/appuser/.config/marimo/marimo.toml && sed -i 's/manager = .*/manager = "uv"/' /home/appuser/.config/marimo/marimo.toml || echo 'manager = "uv"' >> /home/appuser/.config/marimo/marimo.toml && \
+# Create uv cache directory for appuser
+RUN mkdir -p /home/appuser/.cache/uv && \
+    mkdir -p /home/appuser/.config/marimo && \
     chown -R appuser:appuser /home/appuser
+
+# Switch to appuser and configure marimo
 USER appuser
+RUN marimo config show || true && \
+    mkdir -p ~/.config/marimo && \
+    echo '[package_management]' > ~/.config/marimo/marimo.toml && \
+    echo 'manager = "uv"' >> ~/.config/marimo/marimo.toml && \
+    cat ~/.config/marimo/marimo.toml
+
 # Single entry point with sandbox mode
 CMD marimo edit --sandbox --no-token -p $PORT --host $HOST
