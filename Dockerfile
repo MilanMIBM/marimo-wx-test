@@ -21,7 +21,7 @@ RUN uv pip install --system altair pandas numpy && \
     uv pip install --system -r https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/marimo-requirements-v2.txt && \
     python -c "import urllib.request; urllib.request.urlretrieve('https://requirements-installs-bucket.s3.eu-de.cloud-object-storage.appdomain.cloud/pyproject.toml', '/app/pyproject.toml')"
 
-# Create uv cache directory for appuser
+# Create uv cache directory for appuser 
 RUN mkdir -p /home/appuser/.cache/uv && \
     chown -R appuser:appuser /home/appuser && \
     chown appuser:appuser /app/pyproject.toml
